@@ -14,6 +14,13 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #0a0a0a;
+  color: #fff;
+}
+
+html {
+  background: #0a0a0a;
+  scroll-behavior: smooth;
 }
 
 @theme inline {
@@ -138,4 +145,25 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+@keyframes ncp-mask-reveal {
+  0% {
+    -webkit-mask-position: 200% 0;
+    mask-position: 200% 0;
+  }
+  100% {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+}
+
+.ncp-mask-reveal {
+  -webkit-mask-image: linear-gradient(115deg, #000 40%, transparent 60%);
+  mask-image: linear-gradient(115deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 250% 100%;
+  mask-size: 250% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: ncp-mask-reveal 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
