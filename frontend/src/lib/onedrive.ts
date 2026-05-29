@@ -173,6 +173,50 @@ export type RecentItem = DriveItem & {
   parentReference?: { path?: string; name?: string }
 }
 
+export type ProjectStatus = 'lead' | 'in-progress' | 'on-hold' | 'wrapping-up' | 'complete'
+
+export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
+  lead: 'Lead',
+  'in-progress': 'In progress',
+  'on-hold': 'On hold',
+  'wrapping-up': 'Wrapping up',
+  complete: 'Complete',
+}
+
+export type ProjectMeta = {
+  client?: string
+  address?: string
+  phone?: string
+  email?: string
+  dollarAmount?: number
+  startDate?: string
+  dueDate?: string
+  status?: ProjectStatus
+  notes?: string
+}
+
+export const getProjectMeta = (name: string) =>
+  jget<ProjectMeta>(`/api/graph/project/${encodeURIComponent(name)}/meta`)
+
+export async function saveProjectMeta(name: string, meta: ProjectMeta): Promise<void> {
+  const res = await fetch(`/api/graph/project/${encodeURIComponent(name)}/meta`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(meta),
+  })
+  if (!res.ok) throw new Error(`saveProjectMeta ${res.status}: ${await res.text()}`)
+}
+
+export function formatCurrency(amount?: number): string {
+  if (amount == null || isNaN(amount)) return ''
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(amount)
+}
+
 export const getRecent = (limit = 15) =>
   jget<{ value: RecentItem[] }>(`/api/graph/recent?limit=${limit}`)
 export const getLeads = () => jget<{ value: DriveItem[] }>('/api/graph/leads')

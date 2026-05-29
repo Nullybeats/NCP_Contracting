@@ -75,13 +75,60 @@ graphRoutes.get("/projects", async (c) => {
 
 graphRoutes.get("/project/:name", async (c) => {
   const name = c.req.param("name");
-  return forward(await listChildren(`${ACTIVE}/${name}`));
+  const res = await listChildren(`${ACTIVE}/${name}`);
+  if (!res.ok) return forward(res);
+  const json = (await res.json()) as { value?: Array<{ name: string }> };
+  const filtered = (json.value ?? []).filter((v) => v.name !== META_FILE);
+  return c.json({ value: filtered });
 });
 
 graphRoutes.get("/project/:name/folder/:sub", async (c) => {
   const name = c.req.param("name");
   const sub = c.req.param("sub");
   return forward(await listChildren(`${ACTIVE}/${name}/${sub}`));
+});
+
+// D.1 Project metadata sidecar (_project.json)
+const META_FILE = "_project.json";
+
+graphRoutes.get("/project/:name/meta", async (c) => {
+  const name = c.req.param("name");
+  // Try active first, then completed
+  for (const root of [ACTIVE, COMPLETED]) {
+    const path = `${root}/${name}/${META_FILE}`;
+    const res = await callGraph(`/me/drive/root:/${encodePath(path)}:/content`);
+    if (res.ok) {
+      const text = await res.text();
+      try {
+        return c.json(JSON.parse(text));
+      } catch {
+        return c.json({});
+      }
+    }
+    if (res.status !== 404) {
+      // unexpected error — surface
+      return forward(res);
+    }
+  }
+  return c.json({}); // not found is fine; empty meta
+});
+
+graphRoutes.put("/project/:name/meta", async (c) => {
+  const name = c.req.param("name");
+  const body = await c.req.json().catch(() => null);
+  if (!body || typeof body !== "object") return c.json({ error: "invalid body" }, 400);
+  const content = JSON.stringify(body, null, 2);
+  // Check which root has the project
+  let root = ACTIVE;
+  const probe = await callGraph(`/me/drive/root:/${encodePath(`${ACTIVE}/${name}`)}`);
+  if (!probe.ok && probe.status === 404) root = COMPLETED;
+  const path = `${root}/${name}/${META_FILE}`;
+  const res = await callGraph(`/me/drive/root:/${encodePath(path)}:/content`, {
+    method: "PUT",
+    headers: { "content-type": "application/json" },
+    body: content,
+  });
+  return forward(res);
 });
 
 graphRoutes.get("/templates", async () => {

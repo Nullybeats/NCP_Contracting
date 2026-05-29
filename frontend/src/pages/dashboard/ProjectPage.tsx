@@ -15,9 +15,11 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog'
 import {
-  browsePath, completeProject, formatRelative, formatSize, getProject, moveFile,
-  PROJECT_SUBFOLDERS, type DriveItem,
+  browsePath, completeProject, formatCurrency, formatRelative, formatSize, getProject,
+  getProjectMeta, moveFile, PROJECT_STATUS_LABEL, PROJECT_SUBFOLDERS,
+  type DriveItem, type ProjectMeta,
 } from '@/lib/onedrive'
+import { ProjectDetailsDialog } from '@/components/ProjectDetailsDialog'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -97,6 +99,7 @@ export function ProjectPage() {
   const [completing, setCompleting] = useState(false)
   const [previewing, setPreviewing] = useState<DriveItem | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [meta, setMeta] = useState<ProjectMeta>({})
 
   const currentFolderPath = selected
     ? ['NCP Contracting LLC', '01-Active Projects', projectName, selected, ...nested].join('/')
@@ -109,10 +112,17 @@ export function ProjectPage() {
     setSelected(null)
     setFiles(null)
     setNested([])
+    setMeta({})
     ;(async () => {
       try {
         const data = await getProject(projectName)
         if (alive) setSubfolders(data.value)
+        try {
+          const m = await getProjectMeta(projectName)
+          if (alive) setMeta(m ?? {})
+        } catch {
+          // ignore — no meta yet is fine
+        }
       } catch (e) {
         if (alive) setError(String(e))
       }
@@ -177,7 +187,27 @@ export function ProjectPage() {
           </Breadcrumb>
         }
         title={projectName}
+        description={
+          (meta.client || meta.dollarAmount != null || meta.status) ? (
+            <span className="flex items-center gap-3 flex-wrap">
+              {meta.status && (
+                <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider">
+                  {PROJECT_STATUS_LABEL[meta.status]}
+                </span>
+              )}
+              {meta.client && <span>{meta.client}</span>}
+              {meta.address && <span className="text-muted-foreground">· {meta.address}</span>}
+              {meta.dollarAmount != null && <span className="font-medium">{formatCurrency(meta.dollarAmount)}</span>}
+            </span>
+          ) : undefined
+        }
         actions={
+          <>
+          <ProjectDetailsDialog
+            projectName={projectName}
+            initialMeta={meta}
+            onSaved={(m) => setMeta(m)}
+          />
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline">
@@ -201,6 +231,7 @@ export function ProjectPage() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+          </>
         }
       />
       <div className="space-y-6">
