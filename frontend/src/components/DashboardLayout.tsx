@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { FolderKanban, FileText, Users, Receipt, LogOut, ChevronsUpDown } from 'lucide-react'
+import { FolderKanban, FileText, Users, Receipt, Inbox, LogOut, ChevronsUpDown } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -41,9 +41,10 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { to: '/dashboard', label: 'Projects', icon: FolderKanban, match: (p) => p === '/dashboard' || p.startsWith('/dashboard/project') },
+  { to: '/dashboard/leads', label: 'Leads', icon: Inbox, match: (p) => p === '/dashboard/leads' },
+  { to: '/dashboard/subcontractors', label: 'Subcontractors', icon: Users, match: (p) => p === '/dashboard/subcontractors' },
+  { to: '/dashboard/receipts', label: 'Receipts', icon: Receipt, match: (p) => p === '/dashboard/receipts' },
   { to: '/dashboard/templates', label: 'Templates', icon: FileText, match: (p) => p === '/dashboard/templates' },
-  { to: '/dashboard/subcontractors', label: 'Subcontractors', icon: Users, match: (p) => p === '/dashboard/subcontractors', disabled: true },
-  { to: '/dashboard/receipts', label: 'Receipts', icon: Receipt, match: (p) => p === '/dashboard/receipts', disabled: true },
 ]
 
 function ConnectGate() {

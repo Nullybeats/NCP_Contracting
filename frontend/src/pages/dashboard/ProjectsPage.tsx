@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getProjects, formatRelative, type DriveItem } from '@/lib/onedrive'
 import { PageHeader } from '@/components/PageHeader'
+import { RecentActivity } from '@/components/RecentActivity'
 import { NewProjectDialog } from './NewProjectDialog'
 
 function ProjectCard({ item, completed }: { item: DriveItem; completed?: boolean }) {
@@ -61,7 +62,8 @@ export function ProjectsPage() {
         description="Jobs in flight and ones already buttoned up."
         actions={<NewProjectDialog onCreated={() => setRefreshKey((k) => k + 1)} />}
       />
-      <div className="space-y-8">
+      <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
+        <div className="space-y-8">
 
       <section>
         <div className="flex items-center gap-2 mb-3">
@@ -70,7 +72,7 @@ export function ProjectsPage() {
         </div>
         {error && <p className="text-sm text-destructive">{error}</p>}
         {!active && !error && (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <Skeleton className="h-28" />
             <Skeleton className="h-28" />
           </div>
@@ -83,7 +85,7 @@ export function ProjectsPage() {
           </Card>
         )}
         {active && active.length > 0 && (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {active
               .slice()
               .sort((a, b) => a.name.localeCompare(b.name))
@@ -110,7 +112,7 @@ export function ProjectsPage() {
               <p className="text-sm text-muted-foreground">No completed projects yet.</p>
             )}
             {completed && completed.length > 0 && (
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {completed
                   .slice()
                   .sort((a, b) => a.name.localeCompare(b.name))
@@ -120,6 +122,10 @@ export function ProjectsPage() {
           </>
         )}
       </section>
+        </div>
+        <aside className="space-y-4">
+          <RecentActivity />
+        </aside>
       </div>
     </div>
   )

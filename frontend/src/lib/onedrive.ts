@@ -169,6 +169,42 @@ export async function uploadFile(
   return finalJson as DriveItem
 }
 
+export type RecentItem = DriveItem & {
+  parentReference?: { path?: string; name?: string }
+}
+
+export const getRecent = (limit = 15) =>
+  jget<{ value: RecentItem[] }>(`/api/graph/recent?limit=${limit}`)
+export const getLeads = () => jget<{ value: DriveItem[] }>('/api/graph/leads')
+export const getReceipts = (path?: string) =>
+  jget<{ value: DriveItem[] }>(
+    `/api/graph/receipts${path ? `?path=${encodeURIComponent(path)}` : ''}`,
+  )
+
+export type SubcontractorsSheet = {
+  fileId: string
+  fileName: string
+  sheetName?: string
+  address?: string
+  values: (string | number | null)[][]
+}
+export const getSubcontractors = () => jget<SubcontractorsSheet>('/api/graph/subcontractors')
+
+/** Convert a Graph parentReference path (e.g. "/drive/root:/NCP Contracting LLC/01-Active Projects/SDF Renn/03-Photos") into a workflow-friendly tuple */
+export function parseProjectPath(refPath: string | undefined): {
+  project?: string
+  stage?: string
+  nested?: string[]
+} {
+  if (!refPath) return {}
+  const prefix = '/drive/root:/NCP Contracting LLC/01-Active Projects/'
+  const idx = refPath.indexOf(prefix)
+  if (idx < 0) return {}
+  const rest = refPath.slice(idx + prefix.length)
+  const parts = rest.split('/').filter(Boolean)
+  return { project: parts[0], stage: parts[1], nested: parts.slice(2) }
+}
+
 export async function moveFile(id: string, toPath: string): Promise<void> {
   const res = await fetch(`/api/graph/file/${encodeURIComponent(id)}/move`, {
     method: 'POST',

@@ -8,6 +8,9 @@ export const graphRoutes = new Hono();
 const ROOT = "NCP Contracting LLC";
 const ACTIVE = `${ROOT}/01-Active Projects`;
 const COMPLETED = `${ROOT}/02-Completed Projects`;
+const LEADS = `${ROOT}/03-Estimates & Proposals`;
+const SUBCONTRACTORS = `${ROOT}/04-Subcontractors`;
+const RECEIPTS = `${ROOT}/07-Accounting/Receipts`;
 const TEMPLATES = `${ROOT}/09-Templates`;
 const PROJECT_TEMPLATE = `${TEMPLATES}/Project Folder Template`;
 
@@ -148,4 +151,58 @@ graphRoutes.post("/project/:name/complete", async (c) => {
     }),
   });
   return forward(res);
+});
+
+// ---- Phase C endpoints ----
+
+// C.4 Recent activity feed: last-modified items under 01-Active Projects
+graphRoutes.get("/recent", async (c) => {
+  const limit = Math.min(Number(c.req.query("limit") ?? 15), 50);
+  const url = `/me/drive/root:/${encodePath(ACTIVE)}:/search(q='')?$select=id,name,parentReference,lastModifiedDateTime,size,file,folder,webUrl&$orderby=lastModifiedDateTime desc&$top=${limit}`;
+  return forward(await callGraph(url));
+});
+
+// C.3 Leads: list of pre-active estimate/proposal folders
+graphRoutes.get("/leads", async () => {
+  return forward(await listChildren(LEADS));
+});
+
+// C.2 Receipts: group structure under 07-Accounting/Receipts
+graphRoutes.get("/receipts", async (c) => {
+  const sub = c.req.query("path");
+  const target = sub ? `${RECEIPTS}/${sub}` : RECEIPTS;
+  return forward(await listChildren(target));
+});
+
+// C.1 Subcontractors: list rows from the master Excel via Workbook API
+graphRoutes.get("/subcontractors", async () => {
+  // Locate the master list file
+  const listRes = await listChildren(`${SUBCONTRACTORS}/Subcontractor master list`);
+  if (!listRes.ok) return forward(listRes);
+  const json = (await listRes.json()) as { value?: Array<{ name: string; id: string }> };
+  const file = json.value?.find((v) => v.name.toLowerCase().endsWith(".xlsx") || v.name.toLowerCase().endsWith(".xlsm"));
+  if (!file) return new Response(JSON.stringify({ error: "no xlsx in master list folder" }), { status: 404 });
+
+  // Use first worksheet's used range
+  const wbRes = await callGraph(`/me/drive/items/${file.id}/workbook/worksheets`);
+  if (!wbRes.ok) return forward(wbRes);
+  const wb = (await wbRes.json()) as { value?: Array<{ id: string; name: string }> };
+  const sheetId = wb.value?.[0]?.id;
+  if (!sheetId) return new Response(JSON.stringify({ error: "no worksheet" }), { status: 404 });
+
+  const rangeRes = await callGraph(
+    `/me/drive/items/${file.id}/workbook/worksheets('${encodeURIComponent(sheetId)}')/usedRange(valuesOnly=true)?$select=values,address`,
+  );
+  if (!rangeRes.ok) return forward(rangeRes);
+  const range = (await rangeRes.json()) as { values?: unknown[][]; address?: string };
+  return new Response(
+    JSON.stringify({
+      fileId: file.id,
+      fileName: file.name,
+      sheetName: wb.value?.[0]?.name,
+      address: range.address,
+      values: range.values ?? [],
+    }),
+    { status: 200, headers: { "content-type": "application/json" } },
+  );
 });
