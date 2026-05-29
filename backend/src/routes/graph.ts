@@ -118,17 +118,19 @@ graphRoutes.put("/project/:name/meta", async (c) => {
   const body = await c.req.json().catch(() => null);
   if (!body || typeof body !== "object") return c.json({ error: "invalid body" }, 400);
   const content = JSON.stringify(body, null, 2);
-  // Check which root has the project
-  let root = ACTIVE;
-  const probe = await callGraph(`/me/drive/root:/${encodePath(`${ACTIVE}/${name}`)}`);
-  if (!probe.ok && probe.status === 404) root = COMPLETED;
-  const path = `${root}/${name}/${META_FILE}`;
-  const res = await callGraph(`/me/drive/root:/${encodePath(path)}:/content`, {
-    method: "PUT",
-    headers: { "content-type": "application/json" },
-    body: content,
-  });
-  return forward(res);
+
+  // Try writing under Active first; if the project folder isn't there, fall back to Completed.
+  for (const root of [ACTIVE, COMPLETED]) {
+    const path = `${root}/${name}/${META_FILE}`;
+    const res = await callGraph(`/me/drive/root:/${encodePath(path)}:/content`, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: content,
+    });
+    if (res.ok) return forward(res);
+    if (res.status !== 404) return forward(res);
+  }
+  return c.json({ error: "project folder not found in Active or Completed" }, 404);
 });
 
 graphRoutes.get("/templates", async () => {
