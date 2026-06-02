@@ -171,7 +171,7 @@ export function AudienceGate({ onSelect }: Props) {
       {visible && (
         <motion.div
           key="audience-gate"
-          className="fixed inset-0 z-40 bg-black"
+          className="relative w-full h-svh bg-black overflow-hidden"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.6, ease: 'easeOut' } }}
         >
@@ -198,7 +198,7 @@ export function AudienceGate({ onSelect }: Props) {
             <Panel
               id="homeowner"
               side="left"
-              eyebrow="For Homeowners"
+              eyebrow="Residential"
               title="Build the home you live in."
               description="Renovations, additions, and finishes for the spaces you call home — guided by a team that communicates and finishes what we start."
               imageUrl="/projects/bath-01.png"
@@ -211,7 +211,7 @@ export function AudienceGate({ onSelect }: Props) {
             <Panel
               id="developer"
               side="right"
-              eyebrow="For Developers"
+              eyebrow="Commercial"
               title="Build at the scale of your vision."
               description="Multi-unit, commercial, and ground-up construction delivered on schedule, on budget, and to the spec your investors expect."
               imageUrl="/projects/developer-hero.jpg"
@@ -224,14 +224,23 @@ export function AudienceGate({ onSelect }: Props) {
             />
           </div>
 
-          {/* Footer hint */}
+          {/* Footer hint + scroll indicator */}
           <motion.div
-            className="absolute inset-x-0 bottom-0 z-30 flex justify-center px-6 pb-6 sm:pb-8"
+            className="absolute inset-x-0 bottom-0 z-30 flex flex-col items-center gap-2 px-6 pb-5 sm:pb-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">
+            <motion.a
+              href="#contact"
+              className="flex flex-col items-center gap-1 text-[10px] uppercase tracking-[0.3em] text-white/40 hover:text-white/80 transition"
+              animate={{ y: [0, 4, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <span>Scroll to contact</span>
+              <span aria-hidden className="text-base">↓</span>
+            </motion.a>
+            <span className="text-[10px] uppercase tracking-[0.3em] text-white/20">
               NCP Contracting · ncpbuild.com
             </span>
           </motion.div>

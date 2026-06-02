@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Landing } from '@/pages/Landing'
 import { Loader } from '@/components/Loader'
 import { AudienceGate, type Audience } from '@/components/AudienceGate'
+import { ContactSection } from '@/components/ContactSection'
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -10,7 +11,12 @@ function App() {
   return (
     <>
       {loading && <Loader onDone={() => setLoading(false)} />}
-      {!loading && !audience && <AudienceGate onSelect={setAudience} />}
+      {!loading && !audience && (
+        <div className="min-h-svh bg-black">
+          <AudienceGate onSelect={setAudience} />
+          <ContactSection />
+        </div>
+      )}
       {audience && <Landing />}
     </>
   )
