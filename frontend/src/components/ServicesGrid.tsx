@@ -1,7 +1,8 @@
 import { motion, useInView } from 'motion/react'
 import { useRef } from 'react'
+import type { Audience } from '@/components/AudienceGate'
 
-const SERVICES = [
+const RESIDENTIAL_SERVICES = [
   {
     title: 'New Construction',
     body: 'Ground-up residential and light commercial builds, from foundation to final walk-through.',
@@ -28,7 +29,38 @@ const SERVICES = [
   },
 ]
 
-export function ServicesGrid() {
+const COMMERCIAL_SERVICES = [
+  {
+    title: 'Turnkey General Contracting',
+    body: 'Single-source delivery from preconstruction through closeout. One contract, one schedule, one point of accountability.',
+  },
+  {
+    title: 'Multi-Trade Subcontractor Management',
+    body: 'Vetted subs across framing, MEP, drywall, finishes, and more — procured, scheduled, and supervised by our team.',
+  },
+  {
+    title: 'Tenant Improvements & Buildouts',
+    body: 'Restaurant, retail, office, and medical buildouts. Permits to punch list, minimum disruption to neighboring tenants.',
+  },
+  {
+    title: 'Multi-Unit & Mixed-Use',
+    body: 'Townhomes, multi-family, and mixed-use ground-up. Scaled crews, phased delivery, investor-ready handoff.',
+  },
+  {
+    title: 'MEP & Trade Coordination',
+    body: 'Mechanical, electrical, and plumbing coordinated against the architectural sequence so trades hand off cleanly.',
+  },
+  {
+    title: 'Schedule, Budget & Closeout',
+    body: 'Weekly draws, progress photos, RFI / submittal tracking, final inspections, and full closeout documentation.',
+  },
+]
+
+export function ServicesGrid({ audience = 'homeowner' }: { audience?: Audience }) {
+  const isCommercial = audience === 'developer'
+  const SERVICES = isCommercial ? COMMERCIAL_SERVICES : RESIDENTIAL_SERVICES
+  const eyebrow = isCommercial ? 'Capabilities' : 'Services'
+  const heading = isCommercial ? 'What we deliver.' : 'What we build.'
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-15% 0px' })
 
@@ -45,7 +77,7 @@ export function ServicesGrid() {
           transition={{ duration: 0.6 }}
           className="text-xs sm:text-sm tracking-[0.4em] uppercase text-blue-400/80 mb-6"
         >
-          Services
+          {eyebrow}
         </motion.div>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -53,7 +85,7 @@ export function ServicesGrid() {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="text-3xl sm:text-5xl font-semibold tracking-tight leading-[1.1] max-w-3xl"
         >
-          What we build.
+          {heading}
         </motion.h2>
 
         <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10 rounded-sm overflow-hidden">

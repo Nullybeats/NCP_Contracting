@@ -1,6 +1,25 @@
 import { motion } from 'motion/react'
+import type { Audience } from '@/components/AudienceGate'
 
-export function Hero() {
+const COPY = {
+  homeowner: {
+    eyebrow: 'General Contractor · Residential',
+    title: ['Your project. Built right.', 'Delivered on time.'],
+    body:
+      'Full-service general contracting for homeowners and businesses — one team, one point of contact, finished when we said it would be.',
+    primaryCta: 'Get a free estimate',
+  },
+  developer: {
+    eyebrow: 'Commercial · Turnkey Subcontractor Scope',
+    title: ['Turnkey delivery.', 'Every trade, one GC.'],
+    body:
+      'Multi-faceted commercial buildouts handled end-to-end — framing through finishes, MEP coordination, permits, and closeout under a single point of accountability. Predictable schedules, owner-ready handoff.',
+    primaryCta: 'Request a bid package',
+  },
+} as const
+
+export function Hero({ audience = 'homeowner' }: { audience?: Audience }) {
+  const c = COPY[audience]
   return (
     <section
       id="top"
@@ -8,8 +27,8 @@ export function Hero() {
     >
       <video
         className="absolute inset-0 w-full h-full object-cover"
-        src="/hero.mp4"
-        poster="/hero-poster.jpg"
+        src={audience === 'developer' ? '/projects/developer-hero.mp4' : '/hero.mp4'}
+        poster={audience === 'developer' ? '/projects/developer-hero.jpg' : '/hero-poster.jpg'}
         autoPlay
         muted
         loop
@@ -26,7 +45,7 @@ export function Hero() {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="text-xs sm:text-sm tracking-[0.4em] uppercase text-blue-400/90 mb-8"
         >
-          General Contractor · Residential &amp; Commercial
+          {c.eyebrow}
         </motion.div>
 
         <motion.h1
@@ -35,9 +54,9 @@ export function Hero() {
           transition={{ delay: 0.35, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight max-w-4xl leading-[1.05]"
         >
-          Your project. Built right.
+          {c.title[0]}
           <br />
-          <span className="text-white/70">Delivered on time.</span>
+          <span className="text-white/70">{c.title[1]}</span>
         </motion.h1>
 
         <motion.p
@@ -46,8 +65,7 @@ export function Hero() {
           transition={{ delay: 0.55, duration: 0.7 }}
           className="mt-8 max-w-xl text-base sm:text-lg text-white/75 leading-relaxed"
         >
-          Full-service general contracting for homeowners and businesses — one
-          team, one point of contact, finished when we said it would be.
+          {c.body}
         </motion.p>
 
         <motion.div
@@ -60,7 +78,7 @@ export function Hero() {
             href="#contact"
             className="group inline-flex items-center gap-3 bg-blue-500 hover:bg-blue-400 text-white text-sm tracking-[0.2em] uppercase px-7 py-4 rounded-sm transition-colors"
           >
-            Get a free estimate
+            {c.primaryCta}
             <span className="block w-6 h-px bg-white/80 group-hover:w-10 transition-all" />
           </a>
           <a

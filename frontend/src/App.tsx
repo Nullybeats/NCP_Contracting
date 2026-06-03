@@ -17,7 +17,7 @@ function App() {
           <ContactSection />
         </div>
       )}
-      {audience && <Landing />}
+      {audience && <Landing audience={audience} />}
     </>
   )
 }

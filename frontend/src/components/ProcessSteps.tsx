@@ -1,7 +1,8 @@
 import { motion, useInView } from 'motion/react'
 import { useRef } from 'react'
+import type { Audience } from '@/components/AudienceGate'
 
-const STEPS = [
+const RESIDENTIAL_STEPS = [
   {
     title: 'Consultation',
     body: 'A site visit and a real conversation about your goals, budget, and timeline. No pressure, no canned pitch.',
@@ -20,7 +21,49 @@ const STEPS = [
   },
 ]
 
-export function ProcessSteps() {
+const COMMERCIAL_STEPS = [
+  {
+    title: 'Preconstruction',
+    body: 'Constructability review, scope alignment, budget validation, and a phased schedule before a shovel hits the ground.',
+  },
+  {
+    title: 'Subcontractor Procurement',
+    body: 'Trade-by-trade bid leveling. We vet, qualify, and contract the right subs for the scope — and stand behind the work.',
+  },
+  {
+    title: 'Permitting & Mobilization',
+    body: 'Permits pulled, site secured, utilities coordinated, and trailer + tooling staged so day one is productive.',
+  },
+  {
+    title: 'Multi-Trade Execution',
+    body: 'Weekly OAC meetings, RFI / submittal tracking, daily logs, and progress photos. Every trade owned by us — not handed off.',
+  },
+  {
+    title: 'Inspections & QA / QC',
+    body: 'Pre-inspection checklists, third-party testing where required, and rolling punch list resolution so closeout isn’t a fire drill.',
+  },
+  {
+    title: 'Turnover & Closeout',
+    body: 'Final inspections, as-builts, O&M manuals, warranty kickoff, and an owner-ready handoff package.',
+  },
+]
+
+export function ProcessSteps({ audience = 'homeowner' }: { audience?: Audience }) {
+  const isCommercial = audience === 'developer'
+  const STEPS = isCommercial ? COMMERCIAL_STEPS : RESIDENTIAL_STEPS
+  const heading = isCommercial ? (
+    <>
+      Predictable schedules.
+      <br />
+      <span className="text-white/50">Single-source delivery.</span>
+    </>
+  ) : (
+    <>
+      Clear steps. Clear communication.
+      <br />
+      <span className="text-white/50">No surprises.</span>
+    </>
+  )
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-15% 0px' })
 
@@ -45,9 +88,7 @@ export function ProcessSteps() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-3xl sm:text-5xl font-semibold tracking-tight leading-[1.1] max-w-3xl"
         >
-          Clear steps. Clear communication.
-          <br />
-          <span className="text-white/50">No surprises.</span>
+          {heading}
         </motion.h2>
 
         <div className="mt-20 relative">

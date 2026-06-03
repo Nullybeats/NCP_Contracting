@@ -1,6 +1,7 @@
 import { motion } from 'motion/react'
+import type { Audience } from '@/components/AudienceGate'
 
-const ITEMS = [
+const RESIDENTIAL_ITEMS = [
   'Built on trust',
   'Delivered with quality',
   'Residential',
@@ -11,8 +12,19 @@ const ITEMS = [
   'Finish carpentry',
 ]
 
-export function MarqueeStrip() {
-  // duplicate the list so the loop is seamless
+const COMMERCIAL_ITEMS = [
+  'Turnkey delivery',
+  'Single-source GC',
+  'Multi-trade coordination',
+  'Tenant improvements',
+  'Multi-unit',
+  'MEP coordination',
+  'Permits & closeout',
+  'Built on trust',
+]
+
+export function MarqueeStrip({ audience = 'homeowner' }: { audience?: Audience }) {
+  const ITEMS = audience === 'developer' ? COMMERCIAL_ITEMS : RESIDENTIAL_ITEMS
   const loop = [...ITEMS, ...ITEMS]
   return (
     <section className="relative overflow-hidden bg-black border-y border-white/10 py-6">
