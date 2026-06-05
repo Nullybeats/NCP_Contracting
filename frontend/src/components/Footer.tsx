@@ -1,3 +1,12 @@
+const NAME = 'Nicholas Pejack'
+const ROLE = 'Owner · General Contractor'
+const TO = 'contact@ncpbuild.com'
+const PHONE_DISPLAY = '727-324-7699'
+const PHONE_TEL = '+17273247699'
+const INSTAGRAM = 'ncp_contractingllc'
+const LICENSE = 'CGC1541048'
+const LOCATION = 'Tampa Bay Area, Florida'
+
 export function Footer() {
   return (
     <footer
@@ -9,13 +18,13 @@ export function Footer() {
           Get in touch
         </div>
         <h2 className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.1] max-w-3xl">
-          Let's talk about your next project.
+          Let&rsquo;s talk about your next project.
         </h2>
         <a
-          href="mailto:hello@ncpbuild.com"
+          href={`mailto:${TO}`}
           className="group mt-10 inline-flex items-baseline gap-4 text-2xl sm:text-3xl font-medium text-white hover:text-blue-400 transition"
         >
-          hello@ncpbuild.com
+          {TO}
           <span className="block w-12 h-px bg-white/40 group-hover:bg-blue-400 group-hover:w-20 transition-all" />
         </a>
 
@@ -24,23 +33,44 @@ export function Footer() {
             <div className="text-white/40 uppercase tracking-[0.2em] text-xs mb-3">
               Office
             </div>
-            <p>NCP Contracting LLC</p>
-            <p>Address line 1</p>
-            <p>City, State ZIP</p>
+            <p className="text-white">{NAME}</p>
+            <p>{ROLE}</p>
+            <p className="mt-2">NCP Contracting LLC</p>
+            <p>{LOCATION}</p>
           </div>
           <div>
             <div className="text-white/40 uppercase tracking-[0.2em] text-xs mb-3">
-              Hours
+              Licensed &amp; Insured
             </div>
-            <p>Mon – Fri</p>
-            <p>7:00 AM – 6:00 PM</p>
+            <p>License #{LICENSE}</p>
+            <p>Fully insured</p>
+            <p className="mt-2">Residential · Commercial</p>
+            <p>New Construction · Remodels</p>
           </div>
           <div>
             <div className="text-white/40 uppercase tracking-[0.2em] text-xs mb-3">
               Connect
             </div>
-            <p>hello@ncpbuild.com</p>
-            <p>(000) 000-0000</p>
+            <p>
+              <a href={`tel:${PHONE_TEL}`} className="hover:text-white transition">
+                {PHONE_DISPLAY}
+              </a>
+            </p>
+            <p>
+              <a href={`mailto:${TO}`} className="hover:text-white transition">
+                {TO}
+              </a>
+            </p>
+            <p>
+              <a
+                href={`https://instagram.com/${INSTAGRAM}`}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white transition"
+              >
+                @{INSTAGRAM}
+              </a>
+            </p>
           </div>
         </div>
 
