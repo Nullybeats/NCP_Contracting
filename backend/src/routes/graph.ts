@@ -10,6 +10,7 @@ const ACTIVE = `${ROOT}/01-Active Projects`;
 const COMPLETED = `${ROOT}/02-Completed Projects`;
 const LEADS = `${ROOT}/03-Estimates & Proposals`;
 const SUBCONTRACTORS = `${ROOT}/04-Subcontractors`;
+const SUB_APPLICATIONS = `${SUBCONTRACTORS}/Applications`;
 const RECEIPTS = `${ROOT}/07-Accounting/Receipts`;
 const TEMPLATES = `${ROOT}/09-Templates`;
 const PROJECT_TEMPLATE = `${TEMPLATES}/Project Folder Template`;

@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 
 const LINKS = [
-  { label: 'Home', href: '#top' },
-  { label: 'Services', href: '#services' },
-  { label: 'Process', href: '#process' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'About', href: '#about' },
+  { label: 'Home', to: '/' },
+  { label: 'Services', to: '/services' },
+  { label: 'Projects', to: '/projects' },
+  { label: 'Subcontractors', to: '/subcontractors' },
+  { label: 'About', to: '/about' },
+  { label: 'Contact', to: '/contact' },
 ]
 
 export function Nav() {
   const [open, setOpen] = useState(false)
+  const location = useLocation()
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
@@ -19,15 +22,16 @@ export function Nav() {
     }
   }, [open])
 
+  // Close menu on route change
+  useEffect(() => {
+    setOpen(false)
+  }, [location.pathname])
+
   return (
     <>
       <header className="fixed top-0 inset-x-0 z-40">
         <div className="flex items-center justify-between px-6 sm:px-10 h-20">
-          <a
-            href="#top"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-3"
-          >
+          <Link to="/" className="flex items-center gap-3">
             <img
               src="/logo-transparent.png"
               alt="NCP Contracting"
@@ -36,7 +40,7 @@ export function Nav() {
             <span className="hidden sm:inline text-sm tracking-[0.2em] text-white/90 uppercase">
               NCP Contracting
             </span>
-          </a>
+          </Link>
 
           <button
             type="button"
@@ -81,22 +85,27 @@ export function Nav() {
             <div className="relative h-full flex flex-col">
               <div className="absolute inset-0 opacity-[0.06] pointer-events-none [background:radial-gradient(circle_at_70%_30%,#3b82f6,transparent_60%)]" />
 
-              <ul className="flex-1 flex flex-col justify-center gap-2 sm:gap-4 px-8 sm:px-16">
+              <ul className="flex-1 flex flex-col justify-center gap-1 sm:gap-3 px-8 sm:px-16">
                 {LINKS.map((link, i) => (
                   <motion.li
-                    key={link.href}
+                    key={link.to}
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
-                      delay: 0.15 + i * 0.06,
+                      delay: 0.15 + i * 0.05,
                       duration: 0.5,
                       ease: 'easeOut',
                     }}
                   >
-                    <a
-                      href={link.href}
+                    <NavLink
+                      to={link.to}
+                      end={link.to === '/'}
                       onClick={() => setOpen(false)}
-                      className="group inline-flex items-baseline gap-4 text-5xl sm:text-7xl font-semibold tracking-tight text-white/90 hover:text-white transition"
+                      className={({ isActive }) =>
+                        `group inline-flex items-baseline gap-4 text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight transition ${
+                          isActive ? 'text-white' : 'text-white/70 hover:text-white'
+                        }`
+                      }
                     >
                       <span className="text-xs sm:text-sm tracking-[0.3em] text-blue-500/70">
                         0{i + 1}
@@ -105,7 +114,7 @@ export function Nav() {
                         {link.label}
                         <span className="absolute left-0 -bottom-1 h-px w-0 bg-blue-500 transition-all duration-500 group-hover:w-full" />
                       </span>
-                    </a>
+                    </NavLink>
                   </motion.li>
                 ))}
               </ul>
@@ -116,13 +125,22 @@ export function Nav() {
                 transition={{ delay: 0.4 }}
                 className="px-8 sm:px-16 pb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 text-sm text-white/60"
               >
-                <a
-                  href="#contact"
-                  onClick={() => setOpen(false)}
-                  className="text-white text-base tracking-[0.2em] uppercase hover:text-blue-400 transition"
-                >
-                  Get a quote →
-                </a>
+                <div className="flex items-center gap-6">
+                  <Link
+                    to="/contact"
+                    onClick={() => setOpen(false)}
+                    className="text-white text-base tracking-[0.2em] uppercase hover:text-blue-400 transition"
+                  >
+                    Get a quote →
+                  </Link>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setOpen(false)}
+                    className="text-white/40 text-xs tracking-[0.3em] uppercase hover:text-white transition"
+                  >
+                    Owner login
+                  </Link>
+                </div>
                 <div className="text-xs tracking-[0.2em] uppercase">
                   ncpbuild.com
                 </div>
