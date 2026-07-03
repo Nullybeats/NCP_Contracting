@@ -73,10 +73,20 @@ export function ServicesPage() {
     <>
       <PageHero
         breadcrumb={[{ label: 'Home', to: '/' }, { label: 'Services' }]}
-        eyebrow="Capabilities"
-        title={<>What we build.<br /><span className="text-white/60">What we deliver.</span></>}
-        intro="Full-service general contracting across residential and commercial. One team, one point of contact, from preconstruction through closeout."
-        bg="/stock/services-hero.jpg"
+        eyebrow={filter === 'developer' ? 'Commercial Capabilities' : 'Capabilities'}
+        title={
+          filter === 'developer' ? (
+            <>Turnkey delivery.<br /><span className="text-white/60">Every trade, one GC.</span></>
+          ) : (
+            <>What we build.<br /><span className="text-white/60">What we deliver.</span></>
+          )
+        }
+        intro={
+          filter === 'developer'
+            ? 'Multi-faceted commercial buildouts handled end-to-end — framing through finishes, MEP coordination, permits, and closeout under a single point of accountability.'
+            : 'Full-service general contracting across residential and commercial. One team, one point of contact, from preconstruction through closeout.'
+        }
+        bg={filter === 'developer' ? '/stock/services-hero-commercial.jpg' : '/stock/services-hero.jpg'}
       />
 
       {/* Stats band */}
