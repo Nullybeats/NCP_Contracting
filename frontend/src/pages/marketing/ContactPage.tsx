@@ -16,6 +16,7 @@ export function ContactPage() {
         eyebrow="Get In Touch"
         title={<>Let&rsquo;s build something.</>}
         intro="Tell us about your project — scope, timeline, budget, and anything else worth knowing. We reply within one business day."
+        bg="/stock/contact-hero.jpg"
       />
       <ContactSection />
     </>

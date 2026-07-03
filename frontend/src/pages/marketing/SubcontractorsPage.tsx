@@ -112,6 +112,7 @@ export function SubcontractorsPage() {
         eyebrow="Partner With Us"
         title={<>Work with NCP.<br /><span className="text-white/60">Steady jobs, fair terms.</span></>}
         intro="We're always looking for reliable trade partners across Tampa Bay. Submit your info below — we'll reach out when there's a good fit."
+        bg="/stock/subcontractors-hero.jpg"
       />
 
       {/* Benefits */}

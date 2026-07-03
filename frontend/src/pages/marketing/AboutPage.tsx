@@ -31,6 +31,7 @@ export function AboutPage() {
         eyebrow="About Us"
         title={<>Built on trust.<br /><span className="text-white/60">Delivered with quality.</span></>}
         intro="NCP Contracting is a Tampa Bay–based general contractor serving residential and commercial clients. One team, one point of contact, from first walk-through to final closeout."
+        bg="/stock/about-hero.jpg"
       />
 
       {/* Story */}
@@ -81,9 +82,17 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* Credentials */}
+      {/* Credentials split with photo */}
       <section className="relative bg-black py-20 sm:py-28 border-y border-white/10">
-        <div className="max-w-6xl mx-auto px-8 sm:px-16 grid gap-12 lg:grid-cols-2 items-start">
+        <div className="max-w-6xl mx-auto px-8 sm:px-16 grid gap-12 lg:grid-cols-2 items-center">
+          <div className="relative aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5] overflow-hidden rounded-sm">
+            <img
+              src="/stock/values-photo.jpg"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-tr from-black/50 via-transparent to-transparent" />
+          </div>
           <div>
             <div className="text-xs tracking-[0.4em] uppercase text-blue-400/80 mb-6">Credentials</div>
             <div className="space-y-6">
@@ -105,18 +114,22 @@ export function AboutPage() {
               </div>
             </div>
           </div>
-          <div>
-            <div className="text-xs tracking-[0.4em] uppercase text-blue-400/80 mb-6">Service area</div>
-            <p className="text-sm text-white/60 mb-6 leading-relaxed">
-              Based in the Tampa Bay Area. Actively serving Pinellas and Hillsborough counties.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {CITIES.map((c) => (
-                <span key={c} className="text-xs text-white/70 border border-white/15 px-3 py-1.5 rounded-full bg-white/[0.02]">
-                  {c}
-                </span>
-              ))}
-            </div>
+        </div>
+      </section>
+
+      {/* Service area */}
+      <section className="relative bg-neutral-950 py-20 sm:py-28">
+        <div className="max-w-6xl mx-auto px-8 sm:px-16">
+          <div className="text-xs tracking-[0.4em] uppercase text-blue-400/80 mb-6">Service area</div>
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight leading-[1.1] mb-6 max-w-3xl">
+            Based in Tampa Bay. Active across Pinellas and Hillsborough.
+          </h2>
+          <div className="flex flex-wrap gap-2 max-w-4xl">
+            {CITIES.map((c) => (
+              <span key={c} className="text-xs text-white/70 border border-white/15 px-3 py-1.5 rounded-full bg-white/[0.02]">
+                {c}
+              </span>
+            ))}
           </div>
         </div>
       </section>

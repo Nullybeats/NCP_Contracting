@@ -76,6 +76,7 @@ export function ServicesPage() {
         eyebrow="Capabilities"
         title={<>What we build.<br /><span className="text-white/60">What we deliver.</span></>}
         intro="Full-service general contracting across residential and commercial. One team, one point of contact, from preconstruction through closeout."
+        bg="/stock/services-hero.jpg"
       />
 
       {/* Stats band */}
