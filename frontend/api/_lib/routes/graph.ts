@@ -208,8 +208,16 @@ graphRoutes.post("/project/:name/complete", async (c) => {
 // C.4 Recent activity feed: last-modified items under 01-Active Projects
 graphRoutes.get("/recent", async (c) => {
   const limit = Math.min(Number(c.req.query("limit") ?? 15), 50);
-  const url = `/me/drive/root:/${encodePath(ACTIVE)}:/search(q='')?$select=id,name,parentReference,lastModifiedDateTime,size,file,folder,webUrl&$orderby=lastModifiedDateTime desc&$top=${limit}`;
-  return forward(await callGraph(url));
+  const res = await callGraph(
+    `/me/drive/recent?$select=id,name,parentReference,lastModifiedDateTime,size,file,folder,webUrl&$top=100`,
+  );
+  if (!res.ok) return forward(res);
+  const json = (await res.json()) as { value?: Array<{ parentReference?: { path?: string } }> };
+  const prefix = `/drive/root:/${ROOT}/01-Active Projects`;
+  const filtered = (json.value ?? [])
+    .filter((v) => v.parentReference?.path?.includes(prefix))
+    .slice(0, limit);
+  return c.json({ value: filtered });
 });
 
 // C.3 Leads: list of pre-active estimate/proposal folders
