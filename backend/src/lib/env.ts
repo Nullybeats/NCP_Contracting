@@ -12,6 +12,12 @@ export const env = {
   get UPSTASH_REDIS_REST_TOKEN() { return required("UPSTASH_REDIS_REST_TOKEN"); },
   get SESSION_SECRET() { return required("SESSION_SECRET"); },
   get FRONTEND_URL() { return process.env.FRONTEND_URL ?? "http://localhost:5173"; },
+  get ALLOWED_OWNER_EMAILS() {
+    return (process.env.ALLOWED_OWNER_EMAILS ?? "contact@ncpbuild.com")
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+  },
 };
 
 export const MS_TENANT = "common";

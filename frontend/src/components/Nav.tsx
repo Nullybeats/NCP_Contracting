@@ -125,22 +125,13 @@ export function Nav() {
                 transition={{ delay: 0.4 }}
                 className="px-8 sm:px-16 pb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 text-sm text-white/60"
               >
-                <div className="flex items-center gap-6">
-                  <Link
-                    to="/contact"
-                    onClick={() => setOpen(false)}
-                    className="text-white text-base tracking-[0.2em] uppercase hover:text-blue-400 transition"
-                  >
-                    Get a quote →
-                  </Link>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setOpen(false)}
-                    className="text-white/40 text-xs tracking-[0.3em] uppercase hover:text-white transition"
-                  >
-                    Owner login
-                  </Link>
-                </div>
+                <Link
+                  to="/contact"
+                  onClick={() => setOpen(false)}
+                  className="text-white text-base tracking-[0.2em] uppercase hover:text-blue-400 transition"
+                >
+                  Get a quote →
+                </Link>
                 <div className="text-xs tracking-[0.2em] uppercase">
                   ncpbuild.com
                 </div>
