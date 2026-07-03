@@ -8,11 +8,19 @@ import {
   findProject,
   relatedProjects,
 } from '@/lib/projects-data'
+import { useSeo } from '@/lib/useSeo'
 
 export function ProjectDetailPage() {
   const { slug = '' } = useParams<{ slug: string }>()
   const project = findProject(slug)
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
+
+  useSeo({
+    title: project?.title ?? 'Project',
+    description: project?.description ?? undefined,
+    path: `/projects/${slug}`,
+    image: project?.cover,
+  })
 
   if (!project) return <Navigate to="/projects" replace />
 

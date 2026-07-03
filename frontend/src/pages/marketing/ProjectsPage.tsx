@@ -9,6 +9,7 @@ import {
   type MarketingProject,
   type ProjectCategory,
 } from '@/lib/projects-data'
+import { useSeo } from '@/lib/useSeo'
 
 const FILTERS: { value: 'all' | ProjectCategory; label: string }[] = [
   { value: 'all', label: 'All Projects' },
@@ -58,6 +59,12 @@ function ProjectCard({ project, span }: { project: MarketingProject; span: strin
 }
 
 export function ProjectsPage() {
+  useSeo({
+    title: 'Projects',
+    description:
+      'Recent work by NCP Contracting across Tampa Bay — commercial buildouts, residential remodels, and multi-trade turnkey delivery.',
+    path: '/projects',
+  })
   const [params, setParams] = useSearchParams()
   const initial = (params.get('filter') as 'all' | ProjectCategory | null) ?? 'all'
   const [filter, setFilter] = useState<'all' | ProjectCategory>(initial)

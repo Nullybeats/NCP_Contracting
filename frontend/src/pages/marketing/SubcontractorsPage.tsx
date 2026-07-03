@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { PageHero } from '@/components/marketing/PageHero'
 import { CtaBand } from '@/components/marketing/CtaBand'
+import { useSeo } from '@/lib/useSeo'
 
 const BENEFITS = [
   { icon: Briefcase, title: 'Steady work', body: 'Active pipeline of residential and commercial jobs across Tampa Bay.' },
@@ -51,6 +52,12 @@ const EMPTY: FormState = {
 }
 
 export function SubcontractorsPage() {
+  useSeo({
+    title: 'Subcontractors',
+    description:
+      'Partner with NCP Contracting. Steady work across Tampa Bay, fair on-time pay, professional project management. Submit your registration below.',
+    path: '/subcontractors',
+  })
   const [form, setForm] = useState<FormState>(EMPTY)
   const [status, setStatus] = useState<'idle' | 'submitting' | 'ok' | 'error'>('idle')
   const [message, setMessage] = useState('')

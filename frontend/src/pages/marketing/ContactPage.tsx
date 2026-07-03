@@ -1,7 +1,14 @@
 import { PageHero } from '@/components/marketing/PageHero'
 import { ContactSection } from '@/components/ContactSection'
+import { useSeo } from '@/lib/useSeo'
 
 export function ContactPage() {
+  useSeo({
+    title: 'Contact',
+    description:
+      'Get in touch with NCP Contracting. Nicholas Pejack, owner. 727-324-7699. contact@ncpbuild.com. Tampa Bay, Florida.',
+    path: '/contact',
+  })
   return (
     <>
       <PageHero

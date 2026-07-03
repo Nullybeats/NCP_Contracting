@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { ShieldCheck, Award, MapPin, Handshake } from 'lucide-react'
 import { PageHero } from '@/components/marketing/PageHero'
 import { CtaBand } from '@/components/marketing/CtaBand'
+import { useSeo } from '@/lib/useSeo'
 
 const VALUES = [
   { icon: ShieldCheck, title: 'Trust', body: 'Say what we\'ll do, do what we said. No surprises on the invoice.' },
@@ -17,6 +18,12 @@ const CITIES = [
 ]
 
 export function AboutPage() {
+  useSeo({
+    title: 'About',
+    description:
+      'NCP Contracting is a Tampa Bay-based licensed general contractor (CGC1541048) serving residential and commercial clients. Built on trust, delivered with quality.',
+    path: '/about',
+  })
   return (
     <>
       <PageHero

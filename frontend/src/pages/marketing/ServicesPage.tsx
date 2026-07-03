@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { PageHero } from '@/components/marketing/PageHero'
 import { CtaBand } from '@/components/marketing/CtaBand'
 import { ProcessSteps } from '@/components/ProcessSteps'
+import { useSeo } from '@/lib/useSeo'
 import { ShieldCheck, Hammer, Building2, MapPin } from 'lucide-react'
 import type { Audience } from '@/components/AudienceGate'
 
@@ -45,6 +46,12 @@ const FILTERS: { value: Filter; label: string }[] = [
 ]
 
 export function ServicesPage() {
+  useSeo({
+    title: 'Services',
+    description:
+      'Full-service general contracting across residential and commercial. Turnkey delivery from preconstruction through closeout — one team, one point of contact.',
+    path: '/services',
+  })
   const [params, setParams] = useSearchParams()
   const initial = (params.get('audience') as Filter | null) ?? 'all'
   const [filter, setFilter] = useState<Filter>(initial)
